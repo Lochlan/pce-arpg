@@ -24,14 +24,15 @@
 #incspr(spr_hero_dr, "graphics/hero.pcx", 96, 0, 2, 8);
 #incspr(spr_hero_d, "graphics/hero.pcx", 128, 0, 2, 8);
 #incspr(spr_hero_dl, "graphics/hero.pcx", 160, 0, 2, 8);
-#incspr(spr_hero_l, "graphics/hero.pcx", 196, 0, 2, 8);
+#incspr(spr_hero_l, "graphics/hero.pcx", 192, 0, 2, 8);
 #incspr(spr_hero_ul, "graphics/hero.pcx", 224, 0, 2, 8);
 #incpal(pal_hero, "graphics/hero.pcx");
 
 /* GLOBALS */
 char joy1;
 char joy1a;
+char hero_direction;
+char hero_walk_state;
 
 int hero_x;
 int hero_y;
-int hero_frame;

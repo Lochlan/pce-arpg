@@ -46,10 +46,14 @@ run_game() {
 
         spr_set(SPR_NUM__HERO);
 
-        if(joy1 & JOY_B) {
-            spr_pattern(SPR_ADDR__HERO_UR);
-        } else {
+        if(joy1 & JOY_UP) {
             spr_pattern(SPR_ADDR__HERO_U);
+        } else if(joy1 & JOY_RGHT) {
+            spr_pattern(SPR_ADDR__HERO_R);
+        } else if(joy1 & JOY_DOWN) {
+            spr_pattern(SPR_ADDR__HERO_D);
+        } else if(joy1 & JOY_LEFT) {
+            spr_pattern(SPR_ADDR__HERO_L);
         }
 
         satb_update();
