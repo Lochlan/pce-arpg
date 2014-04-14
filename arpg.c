@@ -55,8 +55,14 @@ run_game() {
             spr_addr_hero = SPR_ADDR__HERO_L;
         }
 
+        if(joy1 & JOY_B) {
+            hero_swing = 0x300;
+        } else {
+            hero_swing = 0;
+        }
+
         spr_set(SPR_NUM__HERO);
-        spr_pattern(spr_addr_hero);
+        spr_pattern(spr_addr_hero + hero_swing);
 
         satb_update();
         vsync();
