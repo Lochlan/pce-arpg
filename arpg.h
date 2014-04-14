@@ -15,10 +15,6 @@
 #define SPR_ADDR__HERO_L 0x6800
 #define SPR_ADDR__HERO_UL 0x6C00
 
-#define SPR_ADDR__TEST 0x5300
-
-#define NOT_JOY_B !JOY_B
-
 /* SPRITES */
 #incspr(spr_hero_u, "graphics/hero.pcx", 0, 0, 2, 8);
 #incspr(spr_hero_ur, "graphics/hero.pcx", 32, 0, 2, 8);
