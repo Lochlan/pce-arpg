@@ -17,6 +17,8 @@
 
 #define SPR_ADDR__TEST 0x5300
 
+#define NOT_JOY_B !JOY_B
+
 /* SPRITES */
 #incspr(spr_hero_u, "graphics/hero.pcx", 0, 0, 2, 8);
 #incspr(spr_hero_ur, "graphics/hero.pcx", 32, 0, 2, 8);
@@ -34,7 +36,9 @@ char joy1a;
 char hero_direction;
 char hero_walk_state;
 
+int frame;
 int hero_x;
 int hero_y;
 int spr_addr_hero;
+int spr_addr_hero_modifier;
 int hero_swing;

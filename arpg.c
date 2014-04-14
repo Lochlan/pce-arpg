@@ -7,6 +7,10 @@
 #include "arpg.h"
 
 run_game() {
+    /* init variables */
+    frame = 0;
+    hero_walk_state = 0;
+    spr_addr_hero = SPR_ADDR__HERO_D;
 
      /* init sprites */
     init_satb();
@@ -24,7 +28,6 @@ run_game() {
     spr_set(SPR_NUM__HERO);
     spr_x(hero_x);
     spr_y(hero_y);
-    spr_addr_hero = SPR_ADDR__HERO_D;
     spr_pattern(spr_addr_hero);
     spr_ctrl(SIZE_MAS|FLIP_MAS, SZ_32x32|NO_FLIP);
     spr_pal(PAL_NUM__HERO);
@@ -45,13 +48,26 @@ run_game() {
         joy1 = joy(0);
         joy1a = joytrg(0);
 
+
         if(joy1 & JOY_UP) {
+            if (frame % 8 == 0) {
+                hero_walk_state++;
+            }
             spr_addr_hero = SPR_ADDR__HERO_U;
         } else if(joy1 & JOY_RGHT) {
+            if (frame % 8 == 0) {
+                hero_walk_state++;
+            }
             spr_addr_hero = SPR_ADDR__HERO_R;
         } else if(joy1 & JOY_DOWN) {
+            if (frame % 8 == 0) {
+                hero_walk_state++;
+            }
             spr_addr_hero = SPR_ADDR__HERO_D;
         } else if(joy1 & JOY_LEFT) {
+            if (frame % 8 == 0) {
+                hero_walk_state++;
+            }
             spr_addr_hero = SPR_ADDR__HERO_L;
         }
 
@@ -61,8 +77,21 @@ run_game() {
             hero_swing = 0;
         }
 
+
+        if (hero_walk_state == 1) {
+            spr_addr_hero_modifier = 0x100;
+        } else if (hero_walk_state == 3) {
+            spr_addr_hero_modifier = 0x200;
+        } else{
+            spr_addr_hero_modifier = 0;
+        }
+
+        hero_walk_state = hero_walk_state % 4;
+
         spr_set(SPR_NUM__HERO);
-        spr_pattern(spr_addr_hero + hero_swing);
+        spr_pattern(spr_addr_hero + spr_addr_hero_modifier);
+
+        frame++;
 
         satb_update();
         vsync();
