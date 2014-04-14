@@ -48,7 +48,19 @@ run_game() {
         joy1 = joy(0);
         joy1a = joytrg(0);
 
+        /* hero sprite movement */
+        if(joy1 & JOY_UP) {
+            hero_y--;
+        }  else if(joy1 & JOY_DOWN) {
+            hero_y++;
+        }
+        if(joy1 & JOY_LEFT) {
+            hero_x--;
+        } else if(joy1 & JOY_RGHT) {
+            hero_x++;
+        }
 
+        /* hero direction */
         if(joy1 & JOY_UP) {
             if (frame % 8 == 0) hero_walk_state++;
             if(joy1 & JOY_LEFT) {
@@ -74,7 +86,7 @@ run_game() {
             if (frame % 8 == 0) hero_walk_state++;
             spr_addr_hero = SPR_ADDR__HERO_R;
         }
-
+        /* hero direction walk animation*/
         if (hero_walk_state == 1) {
             spr_addr_hero_modifier = 0x100;
         } else if (hero_walk_state == 3) {
@@ -91,6 +103,8 @@ run_game() {
 
         spr_set(SPR_NUM__HERO);
         spr_pattern(spr_addr_hero + spr_addr_hero_modifier);
+        spr_x(hero_x);
+        spr_y(hero_y);
 
         frame++;
 
