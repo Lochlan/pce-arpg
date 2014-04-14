@@ -24,8 +24,8 @@ run_game() {
     spr_set(SPR_NUM__HERO);
     spr_x(hero_x);
     spr_y(hero_y);
-    spr_addr_hero = SPR_ADDR__HERO_U;
-    spr_pattern(SPR_ADDR__HERO_U);
+    spr_addr_hero = SPR_ADDR__HERO_D;
+    spr_pattern(spr_addr_hero);
     spr_ctrl(SIZE_MAS|FLIP_MAS, SZ_32x32|NO_FLIP);
     spr_pal(PAL_NUM__HERO);
     spr_pri(1);
