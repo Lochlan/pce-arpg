@@ -60,6 +60,8 @@ run_game() {
             hero_x++;
         }
 
+        old_spr_addr_hero = spr_addr_hero;
+
         /* hero direction */
         if (joy1 & JOY_UP) {
             if (frame % 8 == 0) hero_walk_state++;
@@ -95,8 +97,33 @@ run_game() {
             spr_addr_hero_modifier = 0;
         }
 
+        if (joy1 & JOY_A) {
+            spr_addr_hero_modifier = 0x300;
+
+            if (!(joy1a & JOY_A)) {
+                if (spr_addr_hero != old_spr_addr_hero) {
+                    spr_addr_hero = old_spr_addr_hero + 0x400;
+                    if (spr_addr_hero > 0x6C00) spr_addr_hero = 0x5000;
+                }
+
+                if (frame % 4) {
+                    spr_addr_hero = old_spr_addr_hero;
+                }
+            }
+        }
         if (joy1 & JOY_B) {
             spr_addr_hero_modifier = 0x300;
+
+            if (!(joy1a & JOY_B)) {
+                if (spr_addr_hero != old_spr_addr_hero) {
+                    spr_addr_hero = old_spr_addr_hero - 0x400;
+                    if (spr_addr_hero < 0x5000) spr_addr_hero = 0x6C00;
+                }
+
+                if (frame % 4) {
+                    spr_addr_hero = old_spr_addr_hero;
+                }
+            }
         }
 
         hero_walk_state = hero_walk_state % 4;

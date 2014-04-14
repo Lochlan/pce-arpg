@@ -41,4 +41,5 @@ int hero_x;
 int hero_y;
 int spr_addr_hero;
 int spr_addr_hero_modifier;
+int old_spr_addr_hero;
 int hero_swing;
