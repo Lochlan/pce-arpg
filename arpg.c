@@ -50,33 +50,30 @@ run_game() {
 
 
         if(joy1 & JOY_UP) {
-            if (frame % 8 == 0) {
-                hero_walk_state++;
+            if (frame % 8 == 0) hero_walk_state++;
+            if(joy1 & JOY_LEFT) {
+                spr_addr_hero = SPR_ADDR__HERO_UL;
+            } else if(joy1 & JOY_RGHT) {
+                spr_addr_hero = SPR_ADDR__HERO_UR;
+            } else {
+                spr_addr_hero = SPR_ADDR__HERO_U;
             }
-            spr_addr_hero = SPR_ADDR__HERO_U;
-        } else if(joy1 & JOY_RGHT) {
-            if (frame % 8 == 0) {
-                hero_walk_state++;
+        }  else if(joy1 & JOY_DOWN) {
+            if (frame % 8 == 0) hero_walk_state++;
+            if(joy1 & JOY_LEFT) {
+                spr_addr_hero = SPR_ADDR__HERO_DL;
+            } else if(joy1 & JOY_RGHT) {
+                spr_addr_hero = SPR_ADDR__HERO_DR;
+            } else {
+                spr_addr_hero = SPR_ADDR__HERO_D;
             }
-            spr_addr_hero = SPR_ADDR__HERO_R;
-        } else if(joy1 & JOY_DOWN) {
-            if (frame % 8 == 0) {
-                hero_walk_state++;
-            }
-            spr_addr_hero = SPR_ADDR__HERO_D;
         } else if(joy1 & JOY_LEFT) {
-            if (frame % 8 == 0) {
-                hero_walk_state++;
-            }
+            if (frame % 8 == 0) hero_walk_state++;
             spr_addr_hero = SPR_ADDR__HERO_L;
+        } else if(joy1 & JOY_RGHT) {
+            if (frame % 8 == 0) hero_walk_state++;
+            spr_addr_hero = SPR_ADDR__HERO_R;
         }
-
-        if(joy1 & JOY_B) {
-            hero_swing = 0x300;
-        } else {
-            hero_swing = 0;
-        }
-
 
         if (hero_walk_state == 1) {
             spr_addr_hero_modifier = 0x100;
@@ -84,6 +81,10 @@ run_game() {
             spr_addr_hero_modifier = 0x200;
         } else{
             spr_addr_hero_modifier = 0;
+        }
+
+        if(joy1 & JOY_B) {
+            spr_addr_hero_modifier = 0x300;
         }
 
         hero_walk_state = hero_walk_state % 4;
