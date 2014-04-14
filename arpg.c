@@ -24,6 +24,7 @@ run_game() {
     spr_set(SPR_NUM__HERO);
     spr_x(hero_x);
     spr_y(hero_y);
+    spr_addr_hero = SPR_ADDR__HERO_U;
     spr_pattern(SPR_ADDR__HERO_U);
     spr_ctrl(SIZE_MAS|FLIP_MAS, SZ_32x32|NO_FLIP);
     spr_pal(PAL_NUM__HERO);
@@ -44,17 +45,18 @@ run_game() {
         joy1 = joy(0);
         joy1a = joytrg(0);
 
-        spr_set(SPR_NUM__HERO);
-
         if(joy1 & JOY_UP) {
-            spr_pattern(SPR_ADDR__HERO_U);
+            spr_addr_hero = SPR_ADDR__HERO_U;
         } else if(joy1 & JOY_RGHT) {
-            spr_pattern(SPR_ADDR__HERO_R);
+            spr_addr_hero = SPR_ADDR__HERO_R;
         } else if(joy1 & JOY_DOWN) {
-            spr_pattern(SPR_ADDR__HERO_D);
+            spr_addr_hero = SPR_ADDR__HERO_D;
         } else if(joy1 & JOY_LEFT) {
-            spr_pattern(SPR_ADDR__HERO_L);
+            spr_addr_hero = SPR_ADDR__HERO_L;
         }
+
+        spr_set(SPR_NUM__HERO);
+        spr_pattern(spr_addr_hero);
 
         satb_update();
         vsync();

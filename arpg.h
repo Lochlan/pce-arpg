@@ -36,3 +36,4 @@ char hero_walk_state;
 
 int hero_x;
 int hero_y;
+int spr_addr_hero;
