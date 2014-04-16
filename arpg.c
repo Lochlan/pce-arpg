@@ -11,6 +11,7 @@ run_game() {
     frame = 0;
     hero_walk_state = 0;
     spr_addr_hero = SPR_ADDR__HERO_D;
+    joy1_dpad = 0;
 
      /* init sprites */
     init_satb();
@@ -62,32 +63,26 @@ run_game() {
 
         old_spr_addr_hero = spr_addr_hero;
 
-        /* hero direction */
-        if (joy1 & JOY_UP) {
-            if (frame % 8 == 0) hero_walk_state++;
-            if (joy1 & JOY_LEFT) {
-                spr_addr_hero = SPR_ADDR__HERO_UL;
-            } else if (joy1 & JOY_RGHT) {
-                spr_addr_hero = SPR_ADDR__HERO_UR;
-            } else {
-                spr_addr_hero = SPR_ADDR__HERO_U;
-            }
-        }  else if (joy1 & JOY_DOWN) {
-            if (frame % 8 == 0) hero_walk_state++;
-            if (joy1 & JOY_LEFT) {
-                spr_addr_hero = SPR_ADDR__HERO_DL;
-            } else if (joy1 & JOY_RGHT) {
-                spr_addr_hero = SPR_ADDR__HERO_DR;
-            } else {
-                spr_addr_hero = SPR_ADDR__HERO_D;
-            }
-        } else if (joy1 & JOY_LEFT) {
-            if (frame % 8 == 0) hero_walk_state++;
-            spr_addr_hero = SPR_ADDR__HERO_L;
-        } else if (joy1 & JOY_RGHT) {
-            if (frame % 8 == 0) hero_walk_state++;
-            spr_addr_hero = SPR_ADDR__HERO_R;
-        }
+        #asm
+            lda         _joy1
+            lsr4
+            sta         _joy1_dpad
+
+            beq         no_movement_input
+        #endasm
+
+        if (frame % 8 == 0) hero_walk_state++;
+
+        #asm
+            lda         _joy1_dpad
+            tax
+            ;// lower nibble of _spr_addr_hero already zeroed
+            lda         tbl_hero_spr_addr,X
+            sta         _spr_addr_hero+1
+
+        no_movement_input:
+        #endasm
+
         /* hero direction walk animation*/
         if (hero_walk_state == 1) {
             spr_addr_hero_modifier = 0x100;
