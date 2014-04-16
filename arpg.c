@@ -74,8 +74,7 @@ run_game() {
         if (frame % 8 == 0) hero_walk_state++;
 
         #asm
-            lda         _joy1_dpad
-            tax
+            ldx         _joy1_dpad
             ;// lower nibble of _spr_addr_hero already zeroed
             lda         tbl_hero_spr_addr,X
             sta         _spr_addr_hero+1
