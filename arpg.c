@@ -36,7 +36,7 @@ run_game() {
 
     /* font */
     set_font_color(1, 0);
-    set_font_pal(1);
+    set_font_pal(0);
     load_default_font();
 
     satb_update();
