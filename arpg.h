@@ -1,3 +1,13 @@
+#asm
+;// Macros
+lsr4    .macro
+        lsr A
+        lsr A
+        lsr A
+        lsr A
+        .endm
+#endasm
+
 /* Screen resolution is 256x224 */
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 224
@@ -19,6 +29,17 @@
 
 #define SPR_ADDR__SWORD 0x7000
 
+#asm
+SPR_ADDR__HERO_U .equ $5000
+SPR_ADDR__HERO_UR .equ $5400
+SPR_ADDR__HERO_R .equ $5800
+SPR_ADDR__HERO_DR .equ $5C00
+SPR_ADDR__HERO_D .equ $6000
+SPR_ADDR__HERO_DL .equ $6400
+SPR_ADDR__HERO_L .equ $6800
+SPR_ADDR__HERO_UL .equ $6C00
+#endasm
+
 /* SPRITES */
 #incspr(spr_hero_u, "graphics/hero.pcx", 0, 0, 2, 8);
 #incspr(spr_hero_ur, "graphics/hero.pcx", 32, 0, 2, 8);
@@ -37,6 +58,7 @@
 /* GLOBALS */
 char joy1;
 char joy1a;
+char joy1_dpad;
 char hero_direction;
 char hero_walk_state;
 
@@ -52,3 +74,35 @@ int sword_x;
 int sword_y;
 int spr_addr_sword;
 int old_spr_addr_sword;
+
+#asm
+    .bank CONST_BANK
+    .org $4000
+tbl_hero_spr_addr:
+    ;// 0:
+    .db 0
+    ;// 1: U
+    .db HIGH(SPR_ADDR__HERO_U)
+    ;// 2: R
+    .db HIGH(SPR_ADDR__HERO_R)
+    ;// 3: UR
+    .db HIGH(SPR_ADDR__HERO_UR)
+    ;// 4: D
+    .db HIGH(SPR_ADDR__HERO_D)
+    ;// 5:
+    .db 0
+    ;// 6: DR
+    .db HIGH(SPR_ADDR__HERO_DR)
+    ;// 7:
+    .db 0
+    ;// 8: L
+    .db HIGH(SPR_ADDR__HERO_L)
+    ;// 9: UL
+    .db HIGH(SPR_ADDR__HERO_UL)
+    ;// A,B:
+    .db 0,0
+    ;// C: DL
+    .db HIGH(SPR_ADDR__HERO_DL)
+    ;// D,E,F:
+    .db 0,0,0
+#endasm
