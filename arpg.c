@@ -66,29 +66,6 @@ run_game() {
         old_spr_addr_hero = spr_addr_hero;
         old_spr_addr_sword = spr_addr_sword;
 
-        /* hero direction */
-        if (joy1 & JOY_UP) {
-            if (joy1 & JOY_LEFT) {
-                spr_addr_sword = SPR_ADDR__SWORD + 0x1C0;
-            } else if (joy1 & JOY_RGHT) {
-                spr_addr_sword = SPR_ADDR__SWORD + 0x40;
-            } else {
-                spr_addr_sword = SPR_ADDR__SWORD;
-            }
-        } else if (joy1 & JOY_DOWN) {
-            if (joy1 & JOY_LEFT) {
-                spr_addr_sword = SPR_ADDR__SWORD + 0x140;
-            } else if (joy1 & JOY_RGHT) {
-                spr_addr_sword = SPR_ADDR__SWORD + 0xC0;
-            } else {
-                spr_addr_sword = SPR_ADDR__SWORD + 0x100;
-            }
-        } else if (joy1 & JOY_LEFT) {
-            spr_addr_sword = SPR_ADDR__SWORD + 0x180;
-        } else if (joy1 & JOY_RGHT) {
-            spr_addr_sword = SPR_ADDR__SWORD + 0x80;
-        }
-
         /* d-pad input */
         #asm
             lda         _joy1
@@ -112,6 +89,29 @@ run_game() {
             sta         _spr_addr_hero+1
         no_movement_input:
         #endasm
+
+        /* sword */
+        if (joy1 & JOY_UP) {
+            if (joy1 & JOY_LEFT) {
+                spr_addr_sword = SPR_ADDR__SWORD + 0x1C0;
+            } else if (joy1 & JOY_RGHT) {
+                spr_addr_sword = SPR_ADDR__SWORD + 0x40;
+            } else {
+                spr_addr_sword = SPR_ADDR__SWORD;
+            }
+        } else if (joy1 & JOY_DOWN) {
+            if (joy1 & JOY_LEFT) {
+                spr_addr_sword = SPR_ADDR__SWORD + 0x140;
+            } else if (joy1 & JOY_RGHT) {
+                spr_addr_sword = SPR_ADDR__SWORD + 0xC0;
+            } else {
+                spr_addr_sword = SPR_ADDR__SWORD + 0x100;
+            }
+        } else if (joy1 & JOY_LEFT) {
+            spr_addr_sword = SPR_ADDR__SWORD + 0x180;
+        } else if (joy1 & JOY_RGHT) {
+            spr_addr_sword = SPR_ADDR__SWORD + 0x80;
+        }
 
         /* a/b input */
         if (joy1 & JOY_A) {
