@@ -11,6 +11,7 @@ run_game() {
     frame = 0;
     hero_walk_state = 0;
     spr_addr_hero = SPR_ADDR__HERO_D;
+    joy1_dpad = 0;
 
      /* init sprites */
     init_satb();
@@ -35,7 +36,7 @@ run_game() {
 
     /* font */
     set_font_color(1, 0);
-    set_font_pal(1);
+    set_font_pal(0);
     load_default_font();
 
     satb_update();
@@ -47,92 +48,74 @@ run_game() {
     for(;;) {
         joy1 = joy(0);
         joy1a = joytrg(0);
-
-        /* hero sprite movement */
-        if (joy1 & JOY_UP) {
-            hero_y--;
-        }  else if (joy1 & JOY_DOWN) {
-            hero_y++;
-        }
-        if (joy1 & JOY_LEFT) {
-            hero_x--;
-        } else if (joy1 & JOY_RGHT) {
-            hero_x++;
-        }
-
         old_spr_addr_hero = spr_addr_hero;
 
-        /* hero direction */
-        if (joy1 & JOY_UP) {
-            if (frame % 8 == 0) hero_walk_state++;
-            if (joy1 & JOY_LEFT) {
-                spr_addr_hero = SPR_ADDR__HERO_UL;
-            } else if (joy1 & JOY_RGHT) {
-                spr_addr_hero = SPR_ADDR__HERO_UR;
-            } else {
-                spr_addr_hero = SPR_ADDR__HERO_U;
-            }
-        }  else if (joy1 & JOY_DOWN) {
-            if (frame % 8 == 0) hero_walk_state++;
-            if (joy1 & JOY_LEFT) {
-                spr_addr_hero = SPR_ADDR__HERO_DL;
-            } else if (joy1 & JOY_RGHT) {
-                spr_addr_hero = SPR_ADDR__HERO_DR;
-            } else {
-                spr_addr_hero = SPR_ADDR__HERO_D;
-            }
-        } else if (joy1 & JOY_LEFT) {
-            if (frame % 8 == 0) hero_walk_state++;
-            spr_addr_hero = SPR_ADDR__HERO_L;
-        } else if (joy1 & JOY_RGHT) {
-            if (frame % 8 == 0) hero_walk_state++;
-            spr_addr_hero = SPR_ADDR__HERO_R;
-        }
-        /* hero direction walk animation*/
-        if (hero_walk_state == 1) {
-            spr_addr_hero_modifier = 0x100;
-        } else if (hero_walk_state == 3) {
-            spr_addr_hero_modifier = 0x200;
-        } else{
-            spr_addr_hero_modifier = 0;
-        }
+        /* d-pad input */
+        #asm
+            lda         _joy1
+            lsr4
+            sta         _joy1_dpad
+            bne         movement_input
+            jmp         no_movement_input
+        movement_input:
+        #endasm
+        if (joy1 & JOY_UP) hero_y--;
+        else if (joy1 & JOY_DOWN) hero_y++;
 
+        if (joy1 & JOY_LEFT) hero_x--;
+        else if (joy1 & JOY_RGHT) hero_x++;
+
+        if (frame % 8 == 0) hero_walk_state++;
+        #asm
+            ldx         _joy1_dpad
+            ;// lower nibble of _spr_addr_hero already zeroed
+            lda         tbl_hero_spr_addr,X
+            sta         _spr_addr_hero+1
+        no_movement_input:
+        #endasm
+
+        /* a/b input */
         if (joy1 & JOY_A) {
             spr_addr_hero_modifier = 0x300;
-
-            if (!(joy1a & JOY_A)) {
-                if (spr_addr_hero != old_spr_addr_hero) {
-                    spr_addr_hero = old_spr_addr_hero + 0x400;
-                    if (spr_addr_hero > 0x6C00) spr_addr_hero = 0x5000;
-                }
-
+            if (spr_addr_hero != old_spr_addr_hero) {
                 if (frame % 4) {
                     spr_addr_hero = old_spr_addr_hero;
+                } else {
+                    if (!(joy1a & JOY_A)) {
+                        spr_addr_hero = old_spr_addr_hero + 0x400;
+                        if (spr_addr_hero > 0x6C00) spr_addr_hero = 0x5000;
+                    }
                 }
             }
-        }
-        if (joy1 & JOY_B) {
+        } else if (joy1 & JOY_B) {
             spr_addr_hero_modifier = 0x300;
-
-            if (!(joy1a & JOY_B)) {
-                if (spr_addr_hero != old_spr_addr_hero) {
-                    spr_addr_hero = old_spr_addr_hero - 0x400;
-                    if (spr_addr_hero < 0x5000) spr_addr_hero = 0x6C00;
-                }
-
+            if (spr_addr_hero != old_spr_addr_hero) {
                 if (frame % 4) {
                     spr_addr_hero = old_spr_addr_hero;
+                } else {
+                    if (!(joy1a & JOY_B)) {
+                        spr_addr_hero = old_spr_addr_hero - 0x400;
+                        if (spr_addr_hero < 0x5000) spr_addr_hero = 0x6C00;
+                    }
                 }
             }
+        } else {
+            /* hero direction walk animation*/
+            if (hero_walk_state == 1) {
+                spr_addr_hero_modifier = 0x100;
+            } else if (hero_walk_state == 3) {
+                spr_addr_hero_modifier = 0x200;
+            } else{
+                spr_addr_hero_modifier = 0;
+            }
         }
-
-        hero_walk_state = hero_walk_state % 4;
 
         spr_set(SPR_NUM__HERO);
         spr_pattern(spr_addr_hero + spr_addr_hero_modifier);
         spr_x(hero_x);
         spr_y(hero_y);
 
+        hero_walk_state = hero_walk_state % 4;
         frame++;
 
         satb_update();
